@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Real-time weather app with 5-day forecast, search history, and dynamic backgrounds.">
+  <title>Weather App</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-wrapper">
+
+    <nav class="top-nav">
+      <a href="../index.html" class="back-btn" aria-label="Back to portfolio"><i class="fas fa-arrow-left"></i> Back</a>
+      <h1 class="app-title"><i class="fas fa-cloud-sun"></i> Weather App</h1>
+    </nav>
+
+    <div class="search-section">
+      <div class="search-box">
+        <input type="text" id="cityInput" placeholder="Enter city name..." autocomplete="off">
+        <button id="searchBtn" aria-label="Search"><i class="fas fa-search"></i></button>
+      </div>
+      <div class="toggle-group">
+        <button id="unitToggle" class="toggle-btn" aria-label="Toggle temperature unit">&deg;C / &deg;F</button>
+      </div>
+    </div>
+
+    <div id="errorDisplay" class="error-msg hidden"></div>
+
+    <div id="loadingSpinner" class="loading-spinner hidden">
+      <i class="fas fa-spinner fa-spin"></i> Loading...
+    </div>
+
+    <div id="currentWeather" class="weather-card hidden">
+      <div class="weather-main">
+        <div class="weather-icon-wrap">
+          <img id="weatherIcon" src="" alt="Weather icon">
+        </div>
+        <div class="weather-info">
+          <h2 id="cityName" class="city-name">--</h2>
+          <p id="temperature" class="temperature">--</p>
+          <p id="condition" class="condition">--</p>
+        </div>
+      </div>
+      <div class="weather-details">
+        <div class="detail-item">
+          <i class="fas fa-tint"></i>
+          <span>Humidity</span>
+          <strong id="humidity">--</strong>
+        </div>
+        <div class="detail-item">
+          <i class="fas fa-wind"></i>
+          <span>Wind</span>
+          <strong id="windSpeed">--</strong>
+        </div>
+        <div class="detail-item">
+          <i class="fas fa-thermometer-half"></i>
+          <span>Feels Like</span>
+          <strong id="feelsLike">--</strong>
+        </div>
+        <div class="detail-item">
+          <i class="fas fa-compress-alt"></i>
+          <span>Pressure</span>
+          <strong id="pressure">--</strong>
+        </div>
+      </div>
+    </div>
+
+    <div id="forecastSection" class="forecast-section hidden">
+      <h3 class="section-title">5-Day Forecast</h3>
+      <div id="forecastContainer" class="forecast-grid"></div>
+    </div>
+
+    <div id="historySection" class="history-section">
+      <h3 class="section-title">Search History</h3>
+      <ul id="historyList" class="history-list"></ul>
+    </div>
+
+  </div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>

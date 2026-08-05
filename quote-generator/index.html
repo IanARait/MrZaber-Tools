@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Random Quote Generator – Browse, search, and save your favorite quotes across multiple categories.">
+  <title>Random Quote Generator</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome 6 (free) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav-bar">
+    <a href="../index.html" class="back-link" aria-label="Back to portfolio">
+      <i class="fas fa-arrow-left"></i> Back
+    </a>
+    <h1 class="site-title">Quote Generator</h1>
+  </nav>
+
+  <!-- Main Container -->
+  <main class="container">
+
+    <!-- Controls Row -->
+    <section class="controls" aria-label="Quote controls">
+      <div class="controls-row">
+        <select id="categoryFilter" class="select-input" aria-label="Filter by category">
+          <option value="all">All Categories</option>
+          <option value="Inspiration">Inspiration</option>
+          <option value="Wisdom">Wisdom</option>
+          <option value="Life">Life</option>
+          <option value="Success">Success</option>
+          <option value="Love">Love</option>
+          <option value="Humor">Humor</option>
+          <option value="Creativity">Creativity</option>
+          <option value="Motivation">Motivation</option>
+        </select>
+
+        <div class="search-wrapper">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" id="searchInput" class="search-input" placeholder="Search quotes or authors…" aria-label="Search quotes">
+        </div>
+      </div>
+    </section>
+
+    <!-- Quote Card -->
+    <article class="quote-card" aria-label="Current quote">
+      <div class="quote-mark"><i class="fas fa-quote-left"></i></div>
+      <blockquote id="quoteText" class="quote-text">Click "New Quote" to begin</blockquote>
+      <p id="quoteAuthor" class="quote-author">— <span>Unknown</span></p>
+      <span id="quoteCategory" class="category-badge">Inspiration</span>
+    </article>
+
+    <!-- Primary Buttons -->
+    <div class="action-row">
+      <button id="newQuoteBtn" class="btn btn-primary">
+        <i class="fas fa-shuffle"></i> New Quote
+      </button>
+
+      <label class="auto-toggle" title="Auto-rotate every 10 seconds">
+        <input type="checkbox" id="autoRotateCheck">
+        <span class="toggle-track"><span class="toggle-knob"></span></span>
+        <span class="toggle-label">Auto</span>
+      </label>
+    </div>
+
+    <!-- Utility Buttons -->
+    <div class="utility-row">
+      <button id="copyBtn" class="btn btn-outline" aria-label="Copy quote to clipboard">
+        <i class="fas fa-copy"></i> Copy
+      </button>
+      <button id="shareBtn" class="btn btn-outline" aria-label="Share quote on X / Twitter">
+        <i class="fab fa-x-twitter"></i> Share
+      </button>
+      <button id="favBtn" class="btn btn-outline btn-fav" aria-label="Toggle favorite">
+        <i class="fas fa-heart"></i> <span id="favLabel">Favorite</span>
+      </button>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <!-- Favorites Section -->
+    <section id="favoritesSection" class="favorites-section" aria-label="Favorite quotes">
+      <button id="toggleFavoritesBtn" class="btn btn-ghost toggle-favs-btn">
+        <i class="fas fa-heart"></i> Favorites <span id="favCount" class="fav-count">0</span>
+      </button>
+
+      <div id="favoritesList" class="favorites-list hidden">
+        <p class="empty-favs">No favorites yet. Click the heart to save a quote.</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js" defer></script>
+</body>
+</html>

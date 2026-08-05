@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Secure password generator with adjustable options, strength meter, and history">
+  <meta name="theme-color" content="#0a0e1a">
+  <title>Password Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <a href="../index.html" class="back-btn" aria-label="Back to tools">
+      <i class="fas fa-arrow-left"></i> Back
+    </a>
+
+    <header>
+      <i class="fas fa-shield-halved header-icon"></i>
+      <h1>Password Generator</h1>
+      <p class="subtitle">Create strong, secure passwords instantly</p>
+    </header>
+
+    <main class="generator-card">
+      <div class="password-display-wrapper">
+        <div class="password-display">
+          <span id="passwordOutput" class="password-text">Click Generate</span>
+          <button id="copyBtn" class="icon-btn" aria-label="Copy password" title="Copy to clipboard">
+            <i class="fas fa-copy"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="strength-meter">
+        <div class="strength-bar-bg">
+          <div id="strengthBar" class="strength-bar" style="width: 0%;"></div>
+        </div>
+        <span id="strengthLabel" class="strength-label">—</span>
+      </div>
+
+      <div class="controls">
+        <div class="slider-group">
+          <div class="slider-header">
+            <label for="lengthSlider">Length: <span id="lengthValue" class="length-num">16</span></label>
+          </div>
+          <input type="range" id="lengthSlider" min="4" max="64" value="16" class="slider">
+          <div class="slider-range">
+            <span>4</span>
+            <span>64</span>
+          </div>
+        </div>
+
+        <div class="options-grid">
+          <label class="checkbox-label primary">
+            <input type="checkbox" id="chkUpper" checked>
+            <span class="checkmark"></span>
+            Uppercase <span class="opt-hint">(A-Z)</span>
+          </label>
+
+          <label class="checkbox-label primary">
+            <input type="checkbox" id="chkLower" checked>
+            <span class="checkmark"></span>
+            Lowercase <span class="opt-hint">(a-z)</span>
+          </label>
+
+          <label class="checkbox-label primary">
+            <input type="checkbox" id="chkNumbers" checked>
+            <span class="checkmark"></span>
+            Numbers <span class="opt-hint">(0-9)</span>
+          </label>
+
+          <label class="checkbox-label primary">
+            <input type="checkbox" id="chkSymbols">
+            <span class="checkmark"></span>
+            Symbols
+          </label>
+
+          <label class="checkbox-label secondary">
+            <input type="checkbox" id="chkExcludeSimilar">
+            <span class="checkmark"></span>
+            Exclude Similar <span class="opt-hint">(i, l, 1, L, o, 0, O)</span>
+          </label>
+
+          <label class="checkbox-label secondary">
+            <input type="checkbox" id="chkExcludeDuplicate">
+            <span class="checkmark"></span>
+            Exclude Duplicate
+          </label>
+        </div>
+
+        <button id="generateBtn" class="generate-btn">
+          <i class="fas fa-bolt"></i> Generate Password
+        </button>
+      </div>
+    </main>
+
+    <section class="history-section" aria-label="Password history">
+      <div class="history-header">
+        <h2><i class="fas fa-clock-rotate"></i> History</h2>
+        <button id="clearHistoryBtn" class="clear-btn" title="Clear history">
+          <i class="fas fa-trash-can"></i>
+        </button>
+      </div>
+      <ul id="historyList" class="history-list">
+        <li class="history-empty">No passwords generated yet</li>
+      </ul>
+    </section>
+  </div>
+
+  <div id="toast" class="toast" role="alert" aria-live="polite">
+    <i class="fas fa-check-circle"></i>
+    <span id="toastMessage">Copied to clipboard!</span>
+  </div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
