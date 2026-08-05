@@ -1,256 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="John Doe - Frontend Developer Portfolio showcasing 5 projects including Calculator, Weather App, To-Do List, Password Generator, and Random Quote Generator.">
-  <meta name="keywords" content="frontend developer, portfolio, HTML, CSS, JavaScript, React, web developer, John Doe">
-  <meta name="author" content="John Doe">
-
-  <!-- Open Graph -->
-  <meta property="og:title" content="John Doe | Frontend Developer Portfolio">
-  <meta property="og:description" content="Frontend Developer showcasing 5 interactive projects built with modern web technologies.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://johndoe.dev">
-  <meta property="og:locale" content="en_US">
-
-  <!-- Favicon -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💻</text></svg>">
-
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
-
-  <!-- Styles -->
-  <link rel="stylesheet" href="css/style.css">
-
-  <title>John Doe | Frontend Developer Portfolio</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MrZaber Tools</title>
+<style>
+  :root{
+    --bg:#0f1216;
+    --surface:#171b21;
+    --border:#2a303a;
+    --ink:#e8eaed;
+    --muted:#8a93a0;
+    --accent:#5b8def;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+    padding:56px 20px 64px;
+    display:flex; flex-direction:column; align-items:center;
+  }
+  h1{ font-size:28px; font-weight:700; letter-spacing:-0.02em; margin:0 0 6px; text-align:center; }
+  .sub{ max-width:480px; text-align:center; color:var(--muted); font-size:15px; line-height:1.6; margin:14px auto 44px; }
+  .cards{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:14px;
+    width:100%; max-width:720px;
+  }
+  @media (max-width:600px){ .cards{ grid-template-columns:repeat(2, 1fr);} }
+  a.card{
+    background:var(--surface); border:1px solid var(--border); border-radius:8px;
+    padding:22px 16px; text-align:center; text-decoration:none; color:var(--ink);
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+    transition:border-color .15s ease;
+  }
+  a.card:hover{ border-color:var(--accent); }
+  a.card:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  .icon{ font-size:30px; line-height:1; }
+  .name{ font-size:15px; font-weight:600; letter-spacing:-0.01em; }
+  .tag{ font-size:12px; color:var(--muted); }
+  footer{ margin-top:48px; font-size:12px; color:var(--muted); text-align:center; }
+</style>
 </head>
 <body>
-
-  <!-- ==================== Navigation ==================== -->
-  <header class="header" id="header">
-    <nav class="nav container">
-      <a href="#hero" class="nav__logo">
-        <span class="nav__logo-code">&lt;</span>
-        John Doe
-        <span class="nav__logo-code"> /&gt;</span>
-      </a>
-
-      <ul class="nav__list" id="nav-list">
-        <li><a href="#about" class="nav__link">About</a></li>
-        <li><a href="#skills" class="nav__link">Skills</a></li>
-        <li><a href="#projects" class="nav__link">Projects</a></li>
-        <li><a href="#contact" class="nav__link">Contact</a></li>
-      </ul>
-
-      <div class="nav__actions">
-        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
-          <i class="fas fa-moon" id="theme-icon"></i>
-        </button>
-        <button class="nav__hamburger" id="nav-hamburger" aria-label="Toggle navigation menu">
-          <span class="nav__hamburger-line"></span>
-          <span class="nav__hamburger-line"></span>
-          <span class="nav__hamburger-line"></span>
-        </button>
-      </div>
-    </nav>
-  </header>
-
-  <main>
-    <!-- ==================== Hero Section ==================== -->
-    <section class="hero" id="hero">
-      <div class="container hero__container">
-        <div class="hero__content fade-in">
-          <p class="hero__greeting">Hi, my name is</p>
-          <h1 class="hero__name">John Doe</h1>
-          <h2 class="hero__title">Frontend Developer</h2>
-          <p class="hero__subtitle">
-            I build interactive, responsive, and performant web experiences.
-            Explore my <strong>5 projects</strong> showcasing modern frontend development.
-          </p>
-          <div class="hero__cta">
-            <a href="#projects" class="btn btn--primary">
-              <i class="fas fa-eye"></i> View Projects
-            </a>
-            <a href="#contact" class="btn btn--outline">
-              <i class="fas fa-envelope"></i> Contact Me
-            </a>
-          </div>
-        </div>
-        <div class="hero__visual fade-in">
-          <div class="hero__code-block">
-            <pre><code><span class="code-keyword">const</span> <span class="code-func">developer</span> = {
-  name: <span class="code-string">"John Doe"</span>,
-  role: <span class="code-string">"Frontend Developer"</span>,
-  <span class="code-keyword">async</span> <span class="code-func">build</span>() {
-    <span class="code-keyword">return</span> <span class="code-string">"awesome web apps"</span>;
-  }
-};</code></pre>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ==================== About Section ==================== -->
-    <section class="about section" id="about">
-      <div class="container">
-        <h2 class="section__title fade-in">About Me</h2>
-        <div class="about__content fade-in">
-          <div class="about__text">
-            <p>
-              I'm a passionate Frontend Developer with a love for crafting clean,
-              user-friendly web interfaces. With a strong foundation in modern
-              HTML, CSS, and JavaScript, I specialize in building responsive
-              applications that deliver exceptional user experiences.
-            </p>
-            <p>
-              I believe in writing maintainable code, staying up-to-date with
-              industry best practices, and continuously learning new technologies.
-              When I'm not coding, you'll find me exploring new frameworks,
-              contributing to open-source projects, or enjoying a good cup of coffee.
-            </p>
-            <p>
-              This portfolio showcases <strong>5 projects</strong> I've built to
-              demonstrate my frontend development skills — from utility tools
-              to interactive web applications.
-            </p>
-          </div>
-          <div class="about__stats">
-            <div class="stat">
-              <span class="stat__number" data-count="5">0</span>
-              <span class="stat__label">Projects</span>
-            </div>
-            <div class="stat">
-              <span class="stat__number" data-count="3">0</span>
-              <span class="stat__label">Years Learning</span>
-            </div>
-            <div class="stat">
-              <span class="stat__number" data-count="8">0</span>
-              <span class="stat__label">Skills</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ==================== Skills Section ==================== -->
-    <section class="skills section" id="skills">
-      <div class="container">
-        <h2 class="section__title fade-in">My Skills</h2>
-        <p class="section__subtitle fade-in">Technologies and tools I work with</p>
-        <div class="skills__grid" id="skills-grid">
-          <!-- Generated by JS -->
-        </div>
-      </div>
-    </section>
-
-    <!-- ==================== Projects Section ==================== -->
-    <section class="projects section" id="projects">
-      <div class="container">
-        <h2 class="section__title fade-in">Projects</h2>
-        <p class="section__subtitle fade-in">A collection of 5 frontend projects I've built</p>
-        <div class="projects__grid" id="projects-grid">
-          <!-- Generated by JS -->
-        </div>
-      </div>
-    </section>
-
-    <!-- ==================== Contact Section ==================== -->
-    <section class="contact section" id="contact">
-      <div class="container">
-        <h2 class="section__title fade-in">Get In Touch</h2>
-        <p class="section__subtitle fade-in">Have a project in mind? Let's work together.</p>
-
-        <div class="contact__wrapper fade-in">
-          <div class="contact__info">
-            <div class="contact__item">
-              <i class="fas fa-envelope contact__icon"></i>
-              <div>
-                <h3>Email</h3>
-                <a href="mailto:john@example.com">john@example.com</a>
-              </div>
-            </div>
-            <div class="contact__item">
-              <i class="fas fa-phone contact__icon"></i>
-              <div>
-                <h3>Phone</h3>
-                <a href="tel:+1234567890">+1 (234) 567-890</a>
-              </div>
-            </div>
-            <div class="contact__item">
-              <i class="fas fa-map-marker-alt contact__icon"></i>
-              <div>
-                <h3>Location</h3>
-                <p>San Francisco, CA</p>
-              </div>
-            </div>
-            <div class="contact__item">
-              <i class="fab fa-github contact__icon"></i>
-              <div>
-                <h3>GitHub</h3>
-                <a href="https://github.com/johndoe" target="_blank" rel="noopener noreferrer">github.com/johndoe</a>
-              </div>
-            </div>
-            <div class="contact__item">
-              <i class="fab fa-linkedin contact__icon"></i>
-              <div>
-                <h3>LinkedIn</h3>
-                <a href="https://linkedin.com/in/johndoe" target="_blank" rel="noopener noreferrer">linkedin.com/in/johndoe</a>
-              </div>
-            </div>
-          </div>
-
-          <form class="contact__form" id="contact-form" novalidate>
-            <div class="form__group">
-              <label for="form-name" class="form__label">Name</label>
-              <input type="text" id="form-name" class="form__input" placeholder="Your Name" required>
-              <span class="form__error" id="form-name-error"></span>
-            </div>
-            <div class="form__group">
-              <label for="form-email" class="form__label">Email</label>
-              <input type="email" id="form-email" class="form__input" placeholder="your@email.com" required>
-              <span class="form__error" id="form-email-error"></span>
-            </div>
-            <div class="form__group">
-              <label for="form-message" class="form__label">Message</label>
-              <textarea id="form-message" class="form__input form__textarea" rows="5" placeholder="Your message..." required></textarea>
-              <span class="form__error" id="form-message-error"></span>
-            </div>
-            <button type="submit" class="btn btn--primary form__submit">
-              <i class="fas fa-paper-plane"></i> Send Message
-            </button>
-          </form>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- ==================== Footer ==================== -->
-  <footer class="footer">
-    <div class="container footer__container">
-      <div class="footer__social">
-        <a href="https://github.com/johndoe" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-          <i class="fab fa-github"></i>
-        </a>
-        <a href="https://linkedin.com/in/johndoe" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-          <i class="fab fa-linkedin"></i>
-        </a>
-        <a href="https://twitter.com/johndoe" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-          <i class="fab fa-twitter"></i>
-        </a>
-      </div>
-      <p class="footer__copy">
-        &copy; <span id="footer-year"></span> John Doe. Built with <i class="fas fa-heart"></i> using vanilla web technologies.
-      </p>
-    </div>
-  </footer>
-
-  <!-- Script -->
-  <script src="js/script.js" defer></script>
+  <h1>MrZaber Tools</h1>
+  <p class="sub">Five handy little tools. Pick one and use it.</p>
+  <div class="cards">
+    <a class="card" href="calculator/">
+      <div class="icon">&#10133;</div>
+      <div class="name">Calculator</div>
+      <div class="tag">do the math</div>
+    </a>
+    <a class="card" href="weather-app/">
+      <div class="icon">&#9925;</div>
+      <div class="name">Weather App</div>
+      <div class="tag">check the forecast</div>
+    </a>
+    <a class="card" href="todo-app/">
+      <div class="icon">&#9745;</div>
+      <div class="name">To-Do List</div>
+      <div class="tag">track your tasks</div>
+    </a>
+    <a class="card" href="password-generator/">
+      <div class="icon">&#9881;</div>
+      <div class="name">Password Generator</div>
+      <div class="tag">strong passwords</div>
+    </a>
+    <a class="card" href="quote-generator/">
+      <div class="icon">&#10077;</div>
+      <div class="name">Quote Generator</div>
+      <div class="tag">random inspiration</div>
+    </a>
+  </div>
+  <footer>MrZaber Tools &#183; 5 tools, no downloads</footer>
 </body>
 </html>
