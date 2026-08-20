@@ -274,7 +274,14 @@ function showAutocomplete(query) {
     return;
   }
   const q = query.toLowerCase();
-  const matches = CITY_DB.filter(c => c.name.toLowerCase().startsWith(q)).slice(0, 8);
+  const seen = new Set();
+  const matches = CITY_DB.filter(c => {
+    if (!c.name.toLowerCase().startsWith(q)) return false;
+    const key = c.name.toLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }).slice(0, 8);
   if (!matches.length) {
     autocompleteDropdown.innerHTML = '<div class="ac-empty">No cities found</div>';
     autocompleteDropdown.classList.remove('hidden');
