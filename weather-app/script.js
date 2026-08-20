@@ -15,6 +15,7 @@ const UNITS = {
 let currentUnit = 'metric';
 let currentCity = '';
 let acIndex = -1;
+let clockInterval = null;
 
 // ─── DOM References ──────────────────────────────────────────
 const $ = (sel) => document.querySelector(sel);
@@ -30,6 +31,7 @@ const historyList = $('#historyList');
 const autocompleteDropdown = $('#autocompleteDropdown');
 
 const cityName = $('#cityName');
+const localTime = $('#localTime');
 const temperature = $('#temperature');
 const condition = $('#condition');
 const weatherIcon = $('#weatherIcon');
@@ -37,6 +39,133 @@ const humidity = $('#humidity');
 const windSpeed = $('#windSpeed');
 const feelsLike = $('#feelsLike');
 const pressure = $('#pressure');
+
+// ─── City IANA Timezone Map (handles DST automatically) ─────
+const CITY_IANA = {
+  'london': 'Europe/London', 'paris': 'Europe/Paris', 'berlin': 'Europe/Berlin',
+  'rome': 'Europe/Rome', 'madrid': 'Europe/Madrid', 'new york': 'America/New_York',
+  'los angeles': 'America/Los_Angeles', 'chicago': 'America/Chicago',
+  'miami': 'America/New_York', 'tokyo': 'Asia/Tokyo', 'seoul': 'Asia/Seoul',
+  'beijing': 'Asia/Shanghai', 'shanghai': 'Asia/Shanghai', 'mumbai': 'Asia/Kolkata',
+  'dubai': 'Asia/Dubai', 'sydney': 'Australia/Sydney', 'moscow': 'Europe/Moscow',
+  'toronto': 'America/Toronto', 'singapore': 'Asia/Singapore', 'hong kong': 'Asia/Hong_Kong',
+  'istanbul': 'Europe/Istanbul', 'bangkok': 'Asia/Bangkok', 'jakarta': 'Asia/Jakarta',
+  'hanoi': 'Asia/Ho_Chi_Minh', 'cairo': 'Africa/Cairo', 'nairobi': 'Africa/Nairobi',
+  'cape town': 'Africa/Johannesburg', 'lagos': 'Africa/Lagos',
+  'buenos aires': 'America/Argentina/Buenos_Aires', 'santiago': 'America/Santiago',
+  'lima': 'America/Lima', 'bogota': 'America/Bogota', 'rio de janeiro': 'America/Sao_Paulo',
+  'mexico city': 'America/Mexico_City', 'vancouver': 'America/Vancouver',
+  'melbourne': 'Australia/Melbourne', 'auckland': 'Pacific/Auckland',
+  'perth': 'Australia/Perth', 'brisbane': 'Australia/Brisbane',
+  'amsterdam': 'Europe/Amsterdam', 'brussels': 'Europe/Brussels', 'vienna': 'Europe/Vienna',
+  'prague': 'Europe/Prague', 'zurich': 'Europe/Zurich', 'stockholm': 'Europe/Stockholm',
+  'oslo': 'Europe/Oslo', 'copenhagen': 'Europe/Copenhagen', 'helsinki': 'Europe/Helsinki',
+  'warsaw': 'Europe/Warsaw', 'budapest': 'Europe/Budapest', 'athens': 'Europe/Athens',
+  'lisbon': 'Europe/Lisbon', 'dublin': 'Europe/Dublin', 'edinburgh': 'Europe/London',
+  'glasgow': 'Europe/London', 'osaka': 'Asia/Tokyo', 'kuala lumpur': 'Asia/Kuala_Lumpur',
+  'taipei': 'Asia/Taipei', 'manila': 'Asia/Manila', 'ho chi minh city': 'Asia/Ho_Chi_Minh',
+  'phnom penh': 'Asia/Phnom_Penh', 'kathmandu': 'Asia/Kathmandu', 'colombo': 'Asia/Colombo',
+  'dhaka': 'Asia/Dhaka', 'karachi': 'Asia/Karachi', 'tehran': 'Asia/Tehran',
+  'riyadh': 'Asia/Riyadh', 'doha': 'Asia/Qatar', 'muscat': 'Asia/Muscat',
+  'abu dhabi': 'Asia/Dubai', 'amman': 'Asia/Amman', 'beirut': 'Asia/Beirut',
+  'tel aviv': 'Asia/Jerusalem', 'baghdad': 'Asia/Baghdad', 'tashkent': 'Asia/Tashkent',
+  'almaty': 'Asia/Almaty', 'kabul': 'Asia/Kabul', 'ulaanbaatar': 'Asia/Ulaanbaatar',
+  'pyongyang': 'Asia/Pyongyang', 'seattle': 'America/Los_Angeles',
+  'denver': 'America/Denver', 'phoenix': 'America/Phoenix', 'dallas': 'America/Chicago',
+  'houston': 'America/Chicago', 'atlanta': 'America/New_York', 'boston': 'America/New_York',
+  'philadelphia': 'America/New_York', 'detroit': 'America/New_York',
+  'minneapolis': 'America/Chicago', 'portland': 'America/Los_Angeles',
+  'las vegas': 'America/Los_Angeles', 'honolulu': 'Pacific/Honolulu',
+  'anchorage': 'America/Anchorage', 'san francisco': 'America/Los_Angeles',
+  'sandiego': 'America/Los_Angeles', 'washington': 'America/New_York',
+  'nashville': 'America/Chicago', 'new orleans': 'America/Chicago',
+  'charlotte': 'America/New_York', 'nagoya': 'Asia/Tokyo', 'sapporo': 'Asia/Tokyo',
+  'fukuoka': 'Asia/Tokyo', 'yokohama': 'Asia/Tokyo', 'guangzhou': 'Asia/Shanghai',
+  'shenzhen': 'Asia/Shanghai', 'chengdu': 'Asia/Shanghai', 'wuhan': 'Asia/Shanghai',
+  'hangzhou': 'Asia/Shanghai', 'nanjing': 'Asia/Shanghai', 'tianjin': 'Asia/Shanghai',
+  'xian': 'Asia/Shanghai', 'macau': 'Asia/Macau', 'casablanca': 'Africa/Casablanca',
+  'marrakech': 'Africa/Casablanca', 'kolkata': 'Asia/Kolkata', 'chennai': 'Asia/Kolkata',
+  'hyderabad': 'Asia/Kolkata', 'bangalore': 'Asia/Kolkata', 'pune': 'Asia/Kolkata',
+  'ahmedabad': 'Asia/Kolkata', 'jaipur': 'Asia/Kolkata', 'lucknow': 'Asia/Kolkata',
+  'malaga': 'Europe/Madrid', 'milan': 'Europe/Rome', 'minsk': 'Europe/Minsk',
+  'monaco': 'Europe/Monaco', 'montreal': 'America/Toronto', 'munich': 'Europe/Berlin',
+  'marseille': 'Europe/Paris', 'mecca': 'Asia/Riyadh', 'medina': 'Asia/Riyadh',
+  'milwaukee': 'America/Chicago', 'mandalay': 'Asia/Yangon', 'maracaibo': 'America/Caracas',
+  'montevideo': 'America/Montevideo', 'naples': 'Europe/Rome', 'new delhi': 'Asia/Kolkata',
+  'ottawa': 'America/Toronto', 'porto': 'Europe/Lisbon', 'quebec': 'America/Toronto',
+  'liverpool': 'Europe/London', 'leeds': 'Europe/London', 'lyon': 'Europe/Paris',
+  'manaus': 'America/Manaus', 'manchester': 'Europe/London', 'monterrey': 'America/Mexico_City',
+  'nice': 'Europe/Paris', 'okinawa': 'Asia/Tokyo', 'panama city': 'America/Panama',
+  'salvador': 'America/Bahia', 'san diego': 'America/Los_Angeles',
+  'san francisco': 'America/Los_Angeles', 'santiago': 'America/Santiago',
+  'st. petersburg': 'Europe/Moscow', 'suzhou': 'Asia/Shanghai', 'guadalajara': 'America/Mexico_City',
+  'bratislava': 'Europe/Bratislava', 'budapest': 'Europe/Budapest', 'busan': 'Asia/Seoul',
+  'changsha': 'Asia/Shanghai', 'columbus': 'America/New_York', 'guayaquil': 'America/Guayaquil',
+  'jinan': 'Asia/Shanghai', 'kobe': 'Asia/Tokyo', 'kowloon': 'Asia/Hong_Kong',
+  'nagasaki': 'Asia/Tokyo', 'ningbo': 'Asia/Shanghai', 'novosibirsk': 'Asia/Novosibirsk',
+  'sendai': 'Asia/Tokyo', 'shenyang': 'Asia/Shanghai', 'surabaya': 'Asia/Jakarta',
+  'wuhan': 'Asia/Shanghai', 'zhengzhou': 'Asia/Shanghai', 'belfast': 'Europe/London',
+  'bordeaux': 'Europe/Paris', 'cardiff': 'Europe/London', 'florence': 'Europe/Rome',
+  'gothenburg': 'Europe/Stockholm', 'venice': 'Europe/Rome', 'wroclaw': 'Europe/Warsaw',
+  'albeato': 'Asia/Almaty', 'asuncion': 'America/Asuncion', 'bamako': 'Africa/Bamako',
+  'bandung': 'Asia/Jakarta', 'belgrade': 'Europe/Belgrade', 'bologna': 'Europe/Rome',
+  'calgary': 'America/Edmonton', 'campinas': 'America/Sao_Paulo', 'chiang mai': 'Asia/Bangkok',
+  'curitiba': 'America/Sao_Paulo', 'da nang': 'Asia/Ho_Chi_Minh', 'davao': 'Asia/Manila',
+  'edmonton': 'America/Edmonton', 'florianopolis': 'America/Sao_Paulo',
+  'fort lauderdale': 'America/New_York', 'goa': 'Asia/Kolkata', 'ha long': 'Asia/Ho_Chi_Minh',
+  'halifax': 'America/Halifax', 'hamilton': 'America/Toronto', 'hanover': 'Europe/Berlin',
+  'harbin': 'Asia/Shanghai', 'irkutsk': 'Asia/Irkutsk', 'izmir': 'Europe/Istanbul',
+  'dammam': 'Asia/Riyadh', 'daegu': 'Asia/Seoul', 'maastricht': 'Europe/Amsterdam',
+  'macao': 'Asia/Macau', 'malmo': 'Europe/Stockholm', 'mashhad': 'Asia/Tehran',
+  'mataram': 'Asia/Makassar', 'medellin': 'America/Bogota', 'meknes': 'Africa/Casablanca',
+  'merida': 'America/Mexico_City', 'mysore': 'Asia/Kolkata', 'nagpur': 'Asia/Kolkata',
+  'odessa': 'Europe/Kiev', 'okayama': 'Asia/Tokyo', 'pattaya': 'Asia/Bangkok',
+  'pohang': 'Asia/Seoul', 'ponce': 'America/Puerto_Rico', 'port au prince': 'America/Port-au-Prince',
+  'quito': 'America/Guayaquil', 'quanzhou': 'Asia/Shanghai', 'sanya': 'Asia/Shanghai',
+  'savannah': 'America/New_York', 'sharjah': 'Asia/Dubai', 'valencia': 'Europe/Madrid',
+  'veracruz': 'America/Mexico_City', 'xiamen': 'Asia/Shanghai', 'yangon': 'Asia/Yangon',
+  'yaounde': 'Africa/Douala', 'yerevan': 'Asia/Yerevan', 'zanzibar': 'Africa/Dar_es_Salaam',
+  'zhuhai': 'Asia/Shanghai', 'zibo': 'Asia/Shanghai', 'macapa': 'America/Belem',
+  'makkah': 'Asia/Riyadh', 'malatya': 'Europe/Istanbul', 'mandaluyong': 'Asia/Manila',
+  'mangalore': 'Asia/Kolkata', 'maputo': 'Africa/Maputo', 'mardin': 'Europe/Istanbul',
+  'melaka': 'Asia/Kuala_Lumpur', 'merida': 'America/Mexico_City', 'milpitas': 'America/Los_Angeles',
+  'muar': 'Asia/Kuala_Lumpur', 'myitkyina': 'Asia/Yangon', 'mikkeli': 'Europe/Helsinki',
+  'macon': 'America/New_York', 'madurai': 'Asia/Kolkata', 'mangwon': 'Asia/Seoul',
+  'mar del plata': 'America/Argentina/Buenos_Aires', 'maringa': 'America/Sao_Paulo',
+  'massawa': 'Africa/Asmara', 'matadi': 'Africa/Kinshasa', 'mbale': 'Africa/Kampala',
+  'medinah': 'Asia/Riyadh', 'meerut': 'Asia/Kolkata', 'mekelle': 'Africa/Addis_Ababa',
+  'memmingen': 'Europe/Berlin', 'meridian': 'America/Chicago', 'metz': 'Europe/Paris',
+  'mianyang': 'Asia/Shanghai', 'middlesbrough': 'Europe/London', 'modesto': 'America/Los_Angeles',
+  'mogi das cruzes': 'America/Sao_Paulo', 'moncton': 'America/Moncton',
+  'montpellier': 'Europe/Paris', 'morelia': 'America/Mexico_City',
+  'moroni': 'Indian/Comoro', 'mount vernon': 'America/New_York', 'mulhouse': 'Europe/Paris',
+  'munster': 'Europe/Berlin', 'murcia': 'Europe/Madrid', 'muskegon': 'America/New_York',
+  'muzaffarabad': 'Asia/Karachi',
+};
+
+function getCityIANA(cityName) {
+  const key = cityName.toLowerCase();
+  if (CITY_IANA[key]) return CITY_IANA[key];
+  for (const [k, v] of Object.entries(CITY_IANA)) {
+    if (key.includes(k) || k.includes(key)) return v;
+  }
+  return 'UTC';
+}
+
+function getCityTimeInIANA(cityName) {
+  const tz = getCityIANA(cityName);
+  const now = new Date();
+  return now.toLocaleString('en-US', {
+    timeZone: tz,
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+}
 
 // ─── City Database ──────────────────────────────────────────
 const CITY_DB = [
@@ -315,11 +444,22 @@ async function fetchWeather(city) {
 }
 
 // ─── Render ──────────────────────────────────────────────────
+function updateClock() {
+  if (!currentCity) return;
+  const formatted = getCityTimeInIANA(currentCity);
+  localTime.innerHTML = `<i class="fas fa-clock"></i> ${formatted}`;
+}
+
 function renderCurrent(data) {
   const c = data.current;
   const w = c.weather[0];
 
   cityName.textContent = c.name;
+
+  updateClock();
+  if (clockInterval) clearInterval(clockInterval);
+  clockInterval = setInterval(updateClock, 60000);
+
   temperature.textContent = formatTemp(c.main.temp);
   condition.textContent = w.description;
   weatherIcon.src = `https://openweathermap.org/img/wn/${w.icon}@2x.png`;
