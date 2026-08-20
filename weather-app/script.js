@@ -445,7 +445,7 @@ async function fetchWeather(city) {
 
 // ─── Render ──────────────────────────────────────────────────
 function updateClock() {
-  if (!currentCity) return;
+  if (!currentCity || !localTime) return;
   const formatted = getCityTimeInIANA(currentCity);
   localTime.innerHTML = `<i class="fas fa-clock"></i> ${formatted}`;
 }
